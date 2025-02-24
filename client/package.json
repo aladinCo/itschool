@@ -1,0 +1,66 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@monaco-editor/react": "^4.6.0",
+    "bcryptjs": "^2.4.3",
+    "cra-template": "1.2.0",
+    "jwt-decode": "^4.0.0",
+    "loglevel": "^1.9.2",
+    "loglevel-plugin-prefix": "^0.8.4",
+    "monaco-editor": "^0.52.2",
+    "react": "^19.0.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dom": "^19.0.0",
+    "react-grid-layout": "^1.5.0",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "5.0.1"
+  },
+  "proxy": "http://localhost:5000",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "presets": [
+    "@babel/preset-env",
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "@components": "./src/components",
+          "@hooks": "./src/hooks"
+        }
+      }
+    ]
+  ],
+  "devDependencies": {
+    "@svgr/cli": "^8.1.0",
+    "sass": "^1.85.0"
+  }
+}

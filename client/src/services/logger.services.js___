@@ -1,0 +1,131 @@
+class Logger {
+    constructor() {
+        this.logLevels = {
+            debug: 0,
+            info: 1,
+            warn: 2,
+            error: 3,
+        };
+        this.currentLogLevel = this.logLevels.debug; // За замовчуванням debug
+
+        // Зберігаємо оригінальний console.log
+        this.originalConsoleLog = console.log;
+
+        // Перевантажуємо console.log
+        console.log = this.customLog.bind(this);
+    }
+
+    /**
+     * Отримує інформацію про модуль та місце виклику зі стеку помилок.
+     * @param {Error} error - Об'єкт помилки.
+     * @returns {string|null} - Інформація про модуль та місце виклику.
+     */
+    getModuleInfo(error) {
+        if (!error || !error.stack) return null;
+
+        // Розділяємо стек на рядки
+        const stackLines = error.stack.split('\n');
+
+        // Шукаємо перший рядок, який не відноситься до самого логера
+        for (let i = 1; i < stackLines.length; i++) {
+            const stackRegex = /at\s+(.+)\s+\((.*):(\d+):(\d+)\)/;
+            const match = stackLines[i].match(stackRegex);
+
+            if (match) {
+                const [, functionName, filePath, line, column] = match;
+                // Пропускаємо рядки, які відносяться до самого логера
+                if (!filePath.includes("logger.services.js")) {
+                    return `Module: ${filePath}, Line: ${line}, Column: ${column}, Function: ${functionName}`;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Кастомний console.log, який додає timestamp та інформацію про модуль.
+     * @param {...any} args - Аргументи для логування.
+     */
+    customLog(...args) {
+        const timestamp = new Date().toISOString();
+        let formattedMessage = `[${timestamp}] [LOG] ${args.join(' ')}`;
+
+        // Додаємо інформацію про модуль
+        const error = new Error();
+        const moduleInfo = this.getModuleInfo(error);
+        if (moduleInfo) {
+            formattedMessage += `\n${moduleInfo}`;
+        }
+
+        // Виводимо повідомлення через оригінальний console.log
+        this.originalConsoleLog(formattedMessage);
+    }
+
+    /**
+     * Основний метод логування.
+     * @param {string} level - Рівень логування (debug, info, warn, error).
+     * @param {string} message - Повідомлення для логування.
+     * @param {any} details - Додаткові деталі.
+     * @param {string} caller - Інформація про викликаючий код (опціонально).
+     */
+    log(level, message, details = null, caller = null) {
+        if (this.logLevels[level] >= this.currentLogLevel) {
+            const timestamp = new Date().toISOString();
+            let formattedMessage = `[${timestamp}] [${level.toUpperCase()}] ${message}`;
+
+            // Додаємо інформацію про викликаючий код
+            if (caller) {
+                formattedMessage += `\nCaller: ${caller}`;
+            }
+
+            // Додаємо інформацію про модуль
+            const error = new Error();
+            const moduleInfo = this.getModuleInfo(error);
+            if (moduleInfo) {
+                formattedMessage += `\n${moduleInfo}`;
+            }
+
+            // Додаємо деталі, якщо вони є
+            if (details) {
+                formattedMessage += `\nDetails: ${JSON.stringify(details, null, 2)}`;
+            }
+
+            // Виводимо повідомлення
+            console[level](formattedMessage);
+        }
+    }
+
+    // Методи для різних рівнів логування
+    debug(message, details = null, caller = null) {
+        this.log('debug', message, details, caller);
+    }
+
+    info(message, details = null, caller = null) {
+        this.log('info', message, details, caller);
+    }
+
+    warn(message, details = null, caller = null) {
+        this.log('warn', message, details, caller);
+    }
+
+    error(message, details = null, caller = null) {
+        this.log('error', message, details, caller);
+    }
+
+    /**
+     * Встановлює поточний рівень логування.
+     * @param {string} level - Рівень логування (debug, info, warn, error).
+     */
+    setLogLevel(level) {
+        if (this.logLevels.hasOwnProperty(level)) {
+            this.currentLogLevel = this.logLevels[level];
+        } else {
+            this.warn(`Невідомий рівень логування: ${level}`);
+        }
+    }
+}
+
+// Експортуємо єдиний екземпляр логера
+const logger = new Logger();
+export default logger;

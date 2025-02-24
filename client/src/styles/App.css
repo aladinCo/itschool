@@ -1,0 +1,129 @@
+
+
+/*
+***********************************************************************************************
+*/
+:root{
+    --color-noactive: rgb(216, 216, 216);
+    --color-accept: rgb(0, 160, 35);
+    --color-warning: rgb(255, 178, 24);
+}
+
+
+.result-panel {
+
+    --result-marker-default-color : var(--color-noactive);
+    --result-marker-true-color : var(--color-accept);
+    --result-marker-false-color : var(--color-warning);
+
+    width: 100%;
+    min-height: 150px;
+    overflow: auto;
+
+    .result-marker-list{
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    .result-marker-color-default{
+        background-color: var(--result-marker-default-color);
+    }
+    .result-marker-color-true{
+        background-color: var(--result-marker-true-color);
+    }
+    .result-marker-color-false{
+        background-color: var(--result-marker-false-color);
+    }
+
+    .result-marker {
+        display: inline-block;
+        margin:2px;
+        width: 13px;
+        height: 13px;
+        border-radius: 0.125rem;
+        
+    }
+
+}
+
+
+/* Контейнер с меню и основной частью */
+.container {
+    display: flex;
+    height: 100vh;
+  }
+  
+ 
+  
+  .sidebar.collapsed {
+    width: 60px;
+  }
+  
+  /* Кнопка для скрытия меню */
+  .toggle-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 10px;
+  }
+  
+  /* Элементы меню */
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .menu-item:hover {
+    background: #333;
+  }
+  
+  .menu-text {
+    margin-left: 10px;
+    transition: opacity 0.3s;
+  }
+  
+  /* При сжатии скрываем текст main-content*/
+  .sidebar.collapsed .menu-text {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  /* Правая часть (верхняя панель + контент) */
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Верхняя панель */
+  .top-bar {
+    height: 60px;
+    color: #444;;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-size: 18px;
+  }
+  
+  /* Иконка пользователя */
+  .user-icon {
+    font-size: 22px;
+    cursor: pointer;
+  }
+  
+  /* Контент */
+  .content {
+    padding: 0 15px 15px 15px;
+  }

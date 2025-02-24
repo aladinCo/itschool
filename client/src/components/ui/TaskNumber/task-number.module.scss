@@ -1,0 +1,29 @@
+._container{
+    width: 80px;
+    height: 30px;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 30px;    
+}
+
+._container--resolved{
+    background-color: rgb(50, 166, 104);
+}
+._container--notresolved{
+    background-color: rgb(197 212 239);
+    
+}
+
+._container--inprogress{
+    background-color: rgb(244, 183, 0);
+}
+._container--notresolved {
+    > ._container_title{
+        color:rgb(103, 101, 101);
+        font-weight: bold;
+    }
+}
+._container_title{
+    color:white;
+    font-weight: bold;
+}

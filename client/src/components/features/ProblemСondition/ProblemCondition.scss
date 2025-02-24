@@ -1,0 +1,11 @@
+@import '../../../styles/colors.scss';
+
+.problem-condition{
+    width: 100%;
+    height: calc(100% + 40px);
+    overflow-y: auto;
+    margin:20px
+}
+.problem-condition__toolbar_theme{
+    color: $color-text;
+}

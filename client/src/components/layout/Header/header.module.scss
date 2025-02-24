@@ -1,0 +1,32 @@
+._header,
+._lefttoolbar,
+._lefttoolbar_title
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+._header{
+    margin:0 15px 0 0;
+}
+
+._lefttoolbar{
+    custom-property: none;
+}
+
+._lefttoolbar_title{
+    custom-property: none;
+}
+
+._lefttoolbar_title_number{
+    custom-property: none;
+}
+
+._lefttoolbar_title_text{
+    margin-left: 15px;
+    font-weight: bold;
+}
+
+._righttoolbar{
+    custom-property: none;
+}

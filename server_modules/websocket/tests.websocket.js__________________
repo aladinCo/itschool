@@ -1,0 +1,155 @@
+const CONTROLLERS ="TestsWebsocket"
+
+import { compileCpp, runExe, syntaxCpp, cleanup } from '../utils/sandbox.utils.js';
+import { storeWebSocketClient, removeWebSocketClient } from "../websocket/utils.websocket.js";
+import { Examples, Problems } from "../models/index.js";
+
+import logger  from "../utils/logger.utils.js"
+
+async function handleRunTests(socketData) {
+    
+    if (!socketData) {
+        //ws.send(JSON.stringify({ event: "error", status: false, message: "Дані не отримані", result: null }));
+        return;
+    }
+    let exePath, tempDir;
+    try {
+        
+        const { num, input = "", code } = socketData;
+        
+        if (!code) throw new Error('Текст програми відсутній!');      
+        if (!num) throw new Error('# програми відсутній!'); 
+        if (input === null || input === undefined) throw new Error('Вхідні данні відсутні!');       
+
+        //ws.send(JSON.stringify({ event: "start", status: true, message: "START" , result: "Компиляция" }));
+        // Компіляція один раз
+        const resultCompileCpp = await compileCpp(code);
+        exePath = resultCompileCpp.exePath; 
+        tempDir = resultCompileCpp.tempDir;
+
+        const problem = await Problems.findOne({ num }).select("timelimit memorylimit");
+        if (!problem) throw new Error(`Програма #${num} відсутня!`);  
+
+        try{
+            console.log(input)
+            const outputEx = await runExe(exePath, input.toString(), problem.timelimit);
+                        
+            ws.send(JSON.stringify({ event: "transfer", status: true, message: "TRANSFER" , result: outputEx.output}));
+        }
+        catch(err) {
+            throw new Error(err.message);
+        }
+        
+
+         
+        //ws.send(JSON.stringify({ event: "stop", status: true, message: "STOP" , result: "ok stop test" }));
+    } catch (error) {
+        console.log(error.message)
+        logger.error(error.message, {module:CONTROLLERS, inData: socketData})
+        //ws.send(JSON.stringify({ event: "error", status: false, message: logger.sessionId, result:null }));
+    }finally {
+        if (exePath && tempDir) {
+            cleanup(tempDir);
+        }
+    }
+    return { event: "transfer", status: "true", message:" logger.sessionId", result:null }
+}
+
+
+async function handleSendTests(ws, storedData) {
+    
+    if (!storedData) {
+        ws.send(JSON.stringify({ event: "error", data: { status: false, message: "Дані не отримані" } }));
+        return;
+    }
+
+    let exePath, tempDir;
+
+    try {        
+        const { num, code } = storedData;
+                
+        if (!code) throw new Error('Текст програми відсутній!');      
+        if (!num) throw new Error('# програми відсутній!');
+
+        const {status, message} = await syntaxCpp(code);
+        if(!status)
+            throw new Error(message)
+
+        // Компіляція один раз 
+        const resultCompileCpp = await compileCpp(code);
+        exePath = resultCompileCpp.exePath; // Присвоюємо значення всередині try
+        tempDir = resultCompileCpp.tempDir; // Присвоюємо значення всередині try
+
+        const problem = await Problems.findOne({ num }).select("_id");
+        if (!problem) {
+            throw new Error("Задача не знайдена");
+        }
+        
+        const tests = await Examples
+            .find({ "problems": problem._id })
+            .populate({
+                path: 'problems',                                    
+                select: ["timelimit", "memorylimit", "solution", "-_id"]
+            })
+            .exec();
+        
+        if (!tests || tests.length === 0) throw new Error(`Задача з таким ID ${num} відсутня!`);
+
+        const groupedTests = Object.values(tests.reduce((acc, item) => {
+            const {_id, input, output, problems, ...rest } = item.toObject()  // Убираем ненужные свойства
+            const newObj = { id: _id, ...rest }
+
+            const group = item.group
+          
+            if (!acc[group]) {
+              acc[group] = {
+                group: group,
+                testBal: 0,
+                testCount: 0,
+                tests: []
+              }
+            }          
+            acc[group].tests.push(newObj)   // Добавляем очищенный объект
+            acc[group].testCount += 1    // Увеличиваем счетчик тестов
+            acc[group].testBal += newObj.bal
+
+            return acc
+        }, {}))
+        
+        //await new Promise(resolve => setTimeout(resolve, 5000));
+        ws.send(JSON.stringify({ event: "start", status: true, message: "START" , result: groupedTests} ));
+
+        
+        for (const {id,  input, output, time } of tests) {
+            
+            try{
+                const outputEx = await runExe(exePath, input, time);
+                const isCorrect = outputEx.output.trim() === output.trim();
+                
+                const dataSend = {
+                    status: true,
+                    message: isCorrect ? "OK" : "ERROR",
+                    result: {id:id,  time: outputEx.time, isCorrect }
+                }
+                
+                ws.send(JSON.stringify({ event: "transfer", status: true, message: "TRANSFER" , result: dataSend}));
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            catch(err) {
+                console.log("error", err.message)
+            }
+
+        }
+
+        ws.send(JSON.stringify({ event: "stop", status: true, message: "STOP" , result: null }));
+    } catch (error) {
+        console.log(error.message)
+        ws.send(JSON.stringify({ event: "error", status: false, message: error.message, result: null }));
+    }finally {
+        if (exePath && tempDir) {
+            cleanup(tempDir);
+        }
+    }
+}
+
+export { handleSendTests, handleRunTests };

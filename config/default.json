@@ -1,0 +1,20 @@
+
+{
+  
+    "loginModule":{
+      "pauseForEntry": 15,
+      "maxDemand": 5
+    },
+    "auth":{
+      "salt": 12,
+      "jwtSecret": "MI/IEogIBAAKCAQEAujqKzjlfTvXXr/Ri+SVFwnRMdbDqrOVRYdi9z5+rs48gPzzeJrvsr=="
+    },    
+    "global":{
+      "port": 5000,
+      "mongoUri": "mongodb://127.0.0.1:27017/ItSchool?readPreference=primary&ssl=false&directConnection=true",      
+      "shopname": "ItSchool"
+    },
+    "Problems":{
+      
+    }
+}
