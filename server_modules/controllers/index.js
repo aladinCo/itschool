@@ -1,6 +1,7 @@
-import Problem from "./problem.controller.js";
+//import Problem from "./problem.controller.js";
+import Problems from "./problems.controller.js";
 import Solving from "./solving.controller.js";
 import Auth from "./auth.controller.js";
 
 
-export { Problem, Auth, Solving};
+export { Auth, Solving, Problems};

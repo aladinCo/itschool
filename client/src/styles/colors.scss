@@ -1,8 +1,6 @@
-$color-background: rgb(210 224 250);  
-$color-border: rgb(176 191 218);
-$color-background_conteiner: rgb(242 246 255);
 
-$color-background_control: rgb(197 212 239);
+
+
 $color-background_control--notactive: rgb(171, 190, 210);
 $color-background_control--hover:rgb(31,70,110);
 /*$color-background_control--focus:rgb(31,70,110);*/
@@ -14,3 +12,44 @@ $color-text_control: rgb(122, 135, 169);
 $color-text_control--hover: rgb(93, 104, 134);
 /*$color-text_control--focus: rgb(31,70,110);*/
 $color-text_control--focus:rgb(0 56 190);
+
+
+/* Globals color*/
+$color-background: rgb(210 224 250);  
+$color-border: rgb(176 191 218);
+$color-background_conteiner: rgb(242 246 255);
+
+$color-background_control: rgb(197 212 239);
+$color-background_control--active: rgb(198 215 248);
+$color-background_control--notactive: rgb(171, 190, 210);
+$color-background_control--hover:rgb(171, 189, 224);
+
+/* */
+$noactive: rgb(181, 185, 197);
+$accept: rgb(0, 160, 35);
+$warning: rgb(255, 178, 24);
+$alarm: rgb(244, 28, 75);
+
+$marker-default: $noactive;
+$marker-true: $accept;
+$marker-false: $warning;
+$marker-timeaut: $alarm;
+
+$task-number-resolved: $accept;
+$task-number-notresolved: $noactive;
+$task-number-inprogress:$warning;
+
+
+/* Buttons color */
+$primary-color: #007bff; // Синій
+$secondary-color: #6c757d; // Сірий
+$success-color: #28a745; // Зелений
+$warning-color: #ffc107; // Жовтий
+$danger-color: #dc3545; // Червоний
+$info-color: #17a2b8; // Блакитний
+$light-color: #f8f9fa; // Світло-сірий
+$dark-color: #343a40; // Темно-сірий
+
+$btn-background-default:            $color-background;
+$btn-background-default--hover:     $color-background_control--hover;
+$btn-background-default--active:    $color-background_control--active

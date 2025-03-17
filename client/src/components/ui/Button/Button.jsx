@@ -1,72 +1,59 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Svg } from "../../../assets/svg";
+import React from 'react';
+import style from "./btn.module.scss"
 
-const Button = ({
-        icon,
-        text,
-        onClick,
-        type = 'button',
-        isLoading = false,
-        disabled = false,
-        className = '',
-        size = 'medium',
-        variant = 'primary'
-    }) => {
-    
-    const textRef = useRef(null);
-    const [textWidth, setTextWidth] = useState("auto");                
-    const [loadingText, setLoadingText] = useState("Завантаження...");
-    const [isFocused, setIsFocused] = useState(false);
-    const handleFocus = () => setIsFocused(true);
-    const handleBlur = () => setIsFocused(false);
 
-    const handleClick = (e) => {        
-      if (!disabled && !isLoading && onClick) {
-        onClick(e);
-      }
-    };
-  
-    
-    const buttonClasses = [
-        'button',
-        className,
-        isLoading && 'button--loading',
-        `button--${size}`,
-        `button--${variant}`,
-        (disabled || isLoading) && 'button--disabled',
-        isFocused && 'button--focused',
-    ].filter(Boolean).join(' ');
-    
-    useEffect(() => {
-        if (textRef.current && !isLoading) {
-            setTextWidth(`${textRef.current.offsetWidth}px`); // Запоминаем ширину текста
-        }
-        setLoadingText("Завантаження...".slice(0, text.length));
-    }, [text, isLoading]); // Отслеживаем изменение текста и загрузки
+const _shape = Object.freeze({
+  SQUARE:     'square', 
+  CIRCLE:     'circle',
+  RECTANGLE:  'rectangle'
+})
 
-    return (
-      <button
-        type={type}
-        className={buttonClasses}
-        onClick={handleClick}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        disabled={disabled || isLoading}
-        
-      >
-        {isLoading ? (
-            <>
-                <Svg name={"Sync"} className="button__svg" />
-                <div style={{ maxWidth: textWidth }} ref={textRef} className="button__text--loading">{loadingText}...</div>
-            </>
-        ) : (
-            <>
-                <Svg name={icon} className="button__svg" />
-                <div style={{ maxWidth: textWidth }} ref={textRef}  className="button__text">{text}</div>
-            </>
-        )}
-      </button>
-    );
-  }
-  
-  export default Button;
+
+const _color = Object.freeze({
+  DEFAULT:    'default',
+  PRIMARY:    'primary',
+  SECONDRAY:  'secondary',
+  SUCCESS:    'success',
+  WARNING:    'warning',
+  DANGER:     'danger',
+  INFO:       'info',
+  LIGHT:      'light',
+  DARK:       'dark'
+});
+
+const _size = Object.freeze({
+  SMALL:    'small',
+  MEDIUM:   'medium',
+  LARGE:    'large '
+});
+
+const Button = ({ onClick, label, color, shape, size, active, disabled }) => {
+  // Визначення класів для кольору та форми
+  const buttonColorClass = color ? `${_color[color]}` : _color.DEFAULT;
+  const buttonShapeClass = shape ? `${_shape[shape]}` : _shape.CIRCLE;
+  const buttonSizeClass = size ? `${_size[size]}` : _size.MEDIUM;
+  const buttonActiveClass = active ? "--active" : "";
+  return (
+    <button
+      onClick={onClick}
+      className={`${style[buttonColorClass + buttonActiveClass]} ${style[buttonShapeClass]} ${style[buttonSizeClass]} }`}
+      disabled={disabled}
+    >
+      {label}
+    </button>
+  );
+};
+
+Button.defaultProps = {
+  onClick: () => {},
+  label: 'Кнопка',
+  color: _color.DEFAULT,  // За замовчуванням колір синій
+  shape: _shape.CIRCLE,  // За замовчуванням форма кругла
+  size: _size.MEDIUM,
+  active: false,
+  style: {},
+  disabled: false,
+  to: null,  // Якщо не передано prop 'to', рендеримо кнопку
+};
+
+export default Button;

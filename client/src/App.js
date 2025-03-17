@@ -9,7 +9,7 @@ import { AuthProvider } from './context/auth.context';
 import {PrivateRoute} from './components';
 
 import './styles/App.css';
-import {StartPage, ProblemPage, LoginPage} from './components/pages';
+import {StartPage, ProblemsPage, ProblemPage, LoginPage} from './components/pages';
 
 
 
@@ -23,7 +23,8 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage/>} />
           <Route element={<PrivateRoute />}>
-            <Route path="/problem/:id" element={<ProblemPage />} />
+            <Route path="/problems/" element={<ProblemsPage />} />
+            <Route path="/problems/:id" element={<ProblemPage />} />
             <Route path="/" element={<StartPage />} />
           </Route>
         </Routes>

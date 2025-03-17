@@ -1,6 +1,6 @@
 // 🚨 Цей файл фінальний. Не змінювати без дозволу!
 import jwt  from 'jsonwebtoken'; 
-import logger from "../utils/logger.utils.js";
+import logger from "../utils/logger.js";
 
 const ERROR_MESSAGES = {
   UNAUTHORIZED: "Немає авторизації!",
@@ -25,10 +25,10 @@ const auth = (req, res, next) => {
         logger.error(ERROR_MESSAGES.UNAUTHORIZED, {headers : req.headers}, res);
         return;// res.status(401).json({status:false, message: "Немає авторизації!!!"})
       }
-
+//console.log("token start")
       // Перевірка на валідність токена
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      
+//console.log("token end")      
       // Додаємо iduser в req
       req.iduser = decoded; 
 

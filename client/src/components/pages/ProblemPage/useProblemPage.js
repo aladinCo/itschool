@@ -4,7 +4,7 @@ import {createLogger } from '../../../services/logger.services';
 
 // Встановлюємо рівень логування
 const log = createLogger("ProblemPage"); 
-log.setLevel('error');
+log.setLevel('debug');
 
 export const useProblemPage = (id) => {
     const { request, isLoading } = useHttp();
@@ -17,7 +17,7 @@ export const useProblemPage = (id) => {
 
     const fetchProblem = useCallback(async () => {
             try {
-                const problem = await request(`/api/problem/${id}`);
+                const problem = await request(`/api/problems/${id}`);
                 setProblemData(problem.result);
                 log.debug("Result:", problem.result);
             } catch (e) {

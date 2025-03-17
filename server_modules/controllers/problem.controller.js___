@@ -1,0 +1,60 @@
+const CONTROLLERS = "Problem"
+
+import config  from "config"
+const cfg = config[CONTROLLERS]
+
+//const logger = require('../utils/logger.utils')
+import logger  from "../utils/logger.js"
+import { CONTROLLERS_ERRORS } from "../utils/messages/index.js"
+
+import { Problems, ProblemSubmission, User } from "../models/index.js";
+
+
+// /api/problem/:id
+const get = async (req, res) => {
+    try{
+        const numProblem = req.params.id;
+        if (!numProblem ?? numProblem === "") throw new Error(CONTROLLERS_ERRORS.INVALID_NUMBER);
+
+        const publicId = req?.iduser?.publicId;
+        if (!publicId ?? publicId === "") throw new Error(CONTROLLERS_ERRORS.INVALID_NUMBER);
+
+        logger.sessionId = publicId;
+
+    
+        const user = await User.findOne({ publicId: publicId }).select("_id")    
+        
+        const problem = await Problems.findOne({ num: numProblem })
+                .populate({path: 'themes',select: ['name']}).lean();
+                
+        if (!problem) throw new Error(CONTROLLERS_ERRORS.PROBLEM_NOT_EXIST);
+        
+        //const problemSubmission = await ProblemSubmission.findOne({ idProblem: problem._id, idUser:user._id })
+        const problemSubmission = await ProblemSubmission.aggregate([
+            { $match: { idProblem: problem._id, idUser: user._id } },
+            { $sort: { status: -1, createdAt: -1 } }, // Спочатку status: true, потім по createdAt
+            { $limit: 1 } // Беремо лише 1 запис
+          ]);
+
+        const result = {
+            ...problem, 
+            scoredAll: problemSubmission?.[0]?.scoredAll || 0, // Якщо немає – значення за замовчуванням
+            balAll: problemSubmission?.[0]?.balAll || 0,
+            status: problemSubmission?.[0]?.status ?? false // Якщо status може бути false/null
+        }
+
+
+        return res.status(200).json({ status: true, message: `Ok`, result: result })
+    } catch (error) { 
+
+        logger.error(`${CONTROLLERS}:${error.message}`, {regparam: req.params, publicId:req?.iduser}, res)
+        //res.status(500).json({ status: false, message: logger.sessionId , result:error.message})
+    }
+}
+
+const put = async (req, res) => {
+    return res.status(200).json({ status: true, message: `Ok`, result: "ok" })
+}
+
+//ProblemSolving
+export default  { get, put }

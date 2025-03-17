@@ -17,9 +17,9 @@ import config  from "config"
 import mongoose  from "mongoose"
 import http  from 'http'
 
-import logger  from "./server_modules/utils/logger.utils.js"
+import logger  from "./server_modules/utils/logger.js"
 //import {setupWebSocket}  from './server_modules/utils/websocket.utils.js';
-import {setupWebSocket}  from './server_modules/websocket/server.websocket.js';
+import {setupWebSocket}  from './server_modules/utils/websocket/server.js';
 
 //LogRocket.init('xkfy4f/itschool');
 
@@ -48,8 +48,11 @@ app.use(csrfProtection);
 import solvingRoutes from './server_modules/routes/solving.routes.js';
 app.use('/api/solving', solvingRoutes);
 
-import problemRoutes from './server_modules/routes/problem.routes.js';
-app.use('/api/problem', problemRoutes);
+import problemsRoutes from './server_modules/routes/problems.routes.js';
+app.use('/api/problems', problemsRoutes);
+
+//import problemRoutes from './server_modules/routes/problem.routes.js';
+//app.use('/api/problem', problemRoutes);
 
 
 

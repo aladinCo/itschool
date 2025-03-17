@@ -5,7 +5,7 @@ import {createLogger } from '../../../services/logger.services';
 
 // Встановлюємо рівень логування
 const log = createLogger("useEditorCode"); 
-log.setLevel('error');
+log.setLevel('debug');
 
 
 // Функція для збереження даних в localStorage

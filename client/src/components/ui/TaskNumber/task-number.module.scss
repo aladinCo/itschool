@@ -1,28 +1,31 @@
+@use "../../../styles/colors";
+
 ._container{
     width: 80px;
     height: 30px;
     border-radius: 5px;
     text-align: center;
-    line-height: 30px;    
+    line-height: 30px; 
+    
+    transition: background-color 0.2s ease-in-out;
 }
 
 ._container--resolved{
-    background-color: rgb(50, 166, 104);
+    background-color: colors.$marker-true;
 }
 ._container--notresolved{
-    background-color: rgb(197 212 239);
+    background-color: colors.$marker-default;
     
 }
-
 ._container--inprogress{
-    background-color: rgb(244, 183, 0);
+    background-color: colors.$marker-false;
 }
-._container--notresolved {
+/*._container--notresolved {
     > ._container_title{
         color:rgb(103, 101, 101);
         font-weight: bold;
     }
-}
+}*/
 ._container_title{
     color:white;
     font-weight: bold;

@@ -9,13 +9,12 @@ import {createLogger } from '../../../services/logger.services';
 
 // Встановлюємо рівень логування
 const log = createLogger("ProblemLayout"); 
-log.setLevel('debug');
+log.setLevel('error');
 
 const ExecutionResults = ({ results }) => {
     if (!results) {
       return <div>Запустіть програму, щоб побачити результати</div>;
-    }
-  
+    }  
     return (
       <div>
         {results}
@@ -40,7 +39,6 @@ const ProblemLayout = ({problem, applyProblem}) => {
     useEffect(() => {
         // Залежить від зміни applyProblem  
         setInputDataTransfer(applyProblem[0]?.input);  
-        console.log("qwertyu", inputDataTransfer)    
     }, [applyProblem]);
 
 
@@ -62,9 +60,7 @@ const ProblemLayout = ({problem, applyProblem}) => {
         sendTests(num, code);
     }, [handleTabChange, sendTests]);
 
-    const memoizedResultPanel =  (//useMemo(() =>
-        <ResultPanel error={error} status={status} tests={tests} update={update} />
-    );//, [error, status, tests, update]);
+    
     
     const createTab = (id, path, icon, title, content, selected = false) => ({
         id, path, icon, title, content, selected
@@ -84,9 +80,9 @@ const ProblemLayout = ({problem, applyProblem}) => {
         c2: [
             createTab(0, "ts0", "Terminal", "Вхідні дані", <EditorInputData input={inputDataTransfer} inputDataTransfer={setInputDataTransfer}/>, true),
             createTab(1, "ts1", "PlayArrow", "Виконання", <ExecutionResults results={executionResults} />),
-            createTab(2, "ts2", "Leaderboard", "Тестування", memoizedResultPanel),
+            createTab(2, "ts2", "Leaderboard", "Тестування", <ResultPanel isLoading={isLoading} error={error} status={status} tests={tests} data={update} />),
         ],
-    }), [problem, applyProblem, isLoading, error, status, tests, update, inputDataTransfer, executionResults]);
+    }), [problem, applyProblem, isLoading, error, status, tests, update, inputDataTransfer, executionResults, handleRun, handleSend]);
 
     return (
         <div className="layout">

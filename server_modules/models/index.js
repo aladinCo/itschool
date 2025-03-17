@@ -5,5 +5,5 @@ import Themes from './Themes.js';
 import Log from './Log.js';
 import User from './User.js';
 import Solving from './Solving.js';
-import TestResult from './TestResult.js';
-export { Problems, Examples, Themes, Log, User, Solving, TestResult }; 
+import ProblemSubmission from './ProblemSubmission.js';
+export { Problems, Examples, Themes, Log, User, Solving, ProblemSubmission }; 

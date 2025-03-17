@@ -1,7 +1,7 @@
 
 import MonacoEditor from '@monaco-editor/react';
 
-import { Button } from "../../../components/ui";
+import { _Button } from "../../../components/ui";
 import { useEditorCode } from './useEditorCode';
 
 const EditorCode = ({isLoadingSend, isLoadingRun, run = null, send= null,  toolbar = false }) => {
@@ -13,11 +13,11 @@ const EditorCode = ({isLoadingSend, isLoadingRun, run = null, send= null,  toolb
             { toolbar &&
                     <div className='editor__toolbar'>
                         <div className='editor__toolbar_left'>
-                            <Button icon={"Folder"} size="small" text="Завантажити"/>
+                            <_Button icon={"Folder"} size="small" text="Завантажити"/>
                         </div>
                         <div className='editor__toolbar_right'>
-                            <Button icon={"PlayArrow"} onClick={handleClickRun} isLoading={isLoadingRun} text="Запустити"/>
-                            <Button icon={"Send"}  onClick={handleClickSend} isLoading={isLoadingSend} text="Надіслати"/>
+                            <_Button icon={"PlayArrow"} onClick={handleClickRun} isLoading={isLoadingRun} text="Запустити"/>
+                            <_Button icon={"Send"}  onClick={handleClickSend} isLoading={isLoadingSend} text="Надіслати"/>
                         </div>
                     </div>
             }

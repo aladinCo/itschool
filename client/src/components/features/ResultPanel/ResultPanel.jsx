@@ -1,122 +1,57 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
+import { Spinner } from "../../../components"
+import {TestGroupsList} from "./elements"
 
-
+//import * as sass from 'sass';
+//const styles = sass.compileSync("./result-panel.module.scss");
+//const styles = sass.renderSync({ file: "./result-panel.module.scss" });
+import styles from "./result-panel.module.scss";
 
 // Компонент для отображения ошибки
 const ErrorMessage = ({ message }) => (
-    <div className="result-panel">
+    <div className={styles["_status--error"]}>
         <code style={{ whiteSpace: "pre-wrap" }}>{message}</code>
-    </div>
+    </div> 
 );
-
-// Компонент одной группы тестов
-const TestGroupItem = ({ testGroup, colors }) => (
-    <li className="result-panel__tests_item_li">
-        <div className="result-panel__tests_title">
-            <span className="result-panel__tests_item_text">Набір тестів №</span>
-            <span className="result-panel__tests_item_num">{testGroup.group}</span>
-        </div>
-        <div className="result-panel__tests_item_scoring">
-            <span className="result-panel__tests_item_bal">0</span>/
-            <span className="result-panel__tests_item_balall">{testGroup.testBal}</span>
-        </div>
-        <ul className="result-panel__marker-list result-marker-list">
-            {!Array.isArray(testGroup.tests) 
-            ?  <li key={0}>Дані відсутні або не є масивом</li>
-            : testGroup.tests.map((test) => (
-                <li
-                    className={`result-panel__result-marker result-marker ${colors[test.id] || "result-marker-color-default"}`}
-                    key={test.id}
-                ></li>
-            ))}
-        </ul>
-    </li>
-);
-
-// Компонент списка групп тестов
-const TestGroupsList = ({ groups, colors }) => (
-    <ul className="result-panel__tests_list">
-        {!Array.isArray(groups)  || groups.length === 0
-            ?  <li key={0}>Дані відсутні або не є масивом</li>
-            : groups.map((testGroup, index) => (
-            <TestGroupItem key={index} testGroup={testGroup} colors={colors} />
-        ))}
-    </ul>
-);
-
-
-const ResultPanel = React.memo(({ error, status, tests, update }) => {
-    const [colors, setColors] = useState({});
+  
+const ResultPanel = React.memo(({isLoading,  error, status, tests, data }) => {
+    const [content, setContent] = useState("");
+    const [updateData, setUpdateData] = useState(data);
     const [groups, setGroups] = useState([]);
-
-    // Оптимизированное обновление теста
-    const updateTest = useCallback((testId, newTestData) => {
-        setGroups((prevGroups) => {
-            const newGroups = [...prevGroups]; // Копируем массив
-            for (let group of newGroups) {
-                const testIndex = group.tests?.findIndex((test) => String(test.id) === String(testId));
-                if (testIndex !== undefined && testIndex !== -1) {
-                    group.tests[testIndex] = {
-                        ...group.tests[testIndex],
-                        time: newTestData.time,
-                        isCorrect: newTestData.isCorrect,
-                    };
-                    break; // Остановить поиск, если нашли нужный тест
-                }
-            }
-            return newGroups;
-        });
-
-        // Оптимизированное обновление цветов
-        setColors((prevColors) => {
-            const newColor = newTestData.isCorrect ? "result-marker-color-true" : "result-marker-color-false";
-            return prevColors[testId] !== newColor ? { ...prevColors, [testId]: newColor } : prevColors;
-        });
-    }, []);
 
     // Обновление тестов при изменении `tests`
     useEffect(() => {
-        setGroups(tests?.length ? [...tests] : []);
-        setColors({});
-    }, [tests]);
+        setGroups(tests?.groupsTests?.length ? [...tests.groupsTests] : []);
+    }, [tests?.groupsTests]);
+   
 
-    // Обновление конкретного теста при изменении `update`
     useEffect(() => {
-        if (update?.id) {
-            updateTest(update.id, update);
+        setUpdateData(data)
+    }, [data]);
+
+    useEffect(() => {
+        if(!status) 
+            setContent("Надішліть вашу програму, щоб побачити результати.");
+        else if(isLoading) 
+            setContent(<Spinner />);
+        else if(status === "error")
+            setContent(<ErrorMessage message={error} />)
+        else if(status !== "error") {        
+            setContent(<TestGroupsList status={status} groupsData={groups} groupsUpdate={updateData}/>)
         }
-    }, [update, updateTest]);
+    }, [status, error, isLoading, groups, updateData]);
 
-    // Оптимизированное преобразование `\n` в `<br />`
-    const convertNewLinesToBr = (text) => {
-        if (!text || typeof text !== "string") return "";
-        return text.split("\n").map((line, index) => (
-            <div key={index}>
-                {line}
-                <br />
+    return(
+        <div className={styles._}>
+            <div className={styles[`_status--${!status ? 'default' :  status}`]}>
+                {content}
             </div>
-        ));
-    };
-    
-    if (!Array.isArray(groups)) {
-            return <div>Дані відсутні або не є масивом</div>;
-    }else {
-    return (        
-            <div className="result-panel">
-                <div className={`result-panel__status--${status}`}>
-                    {status === "error" && <ErrorMessage message={error} />}
-
-                    {groups.length === 0 && status !== "error" ? (
-                        <div className="result-panel__null_message">
-                            Надішліть вашу програму, щоб побачити результати.
-                        </div>
-                    ) : (
-                        <TestGroupsList groups={groups} colors={colors} />
-                    )}
-                </div>
-            </div>
-        );
-    }
+        </div>
+    )
 });
 
 export default ResultPanel;
+/*<div>Error:{JSON.stringify(error)}</div>
+<div>Status:{JSON.stringify(status)}</div>
+<div>Tests:{JSON.stringify(tests)}</div>
+<div>Update:{JSON.stringify(date)}</div>*/

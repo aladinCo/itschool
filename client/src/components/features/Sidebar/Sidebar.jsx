@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FaHome, FaCog, FaBars, FaUser } from "react-icons/fa"; // Иконки
 
 const Sidebar = ({isCollapsed}) => {
@@ -7,7 +8,7 @@ const Sidebar = ({isCollapsed}) => {
   return (      
       <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
         <ul>
-          <MenuItem icon={<FaHome />} text="Главная" isCollapsed={isCollapsed} />
+          <MenuItem to="/problems" icon={<FaHome />} text="Главная" isCollapsed={isCollapsed} />
           <MenuItem icon={<FaCog />} text="Настройки" isCollapsed={isCollapsed} />
         </ul>
       </div> 
@@ -17,11 +18,13 @@ const Sidebar = ({isCollapsed}) => {
 
 
 // Компонент пункта меню
-const MenuItem = ({ icon, text, isCollapsed }) => {
+const MenuItem = ({ icon, text, to="", isCollapsed }) => {
   return (
     <li className="menu-item">
-      {icon}
-      {!isCollapsed && <span className="menu-text">{text}</span>}
+      <Link to={to}>
+        {icon}
+        {!isCollapsed && <span className="menu-text">{text}</span>}
+      </Link>
     </li>
   );
 };

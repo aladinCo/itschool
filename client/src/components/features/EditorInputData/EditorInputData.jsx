@@ -5,7 +5,7 @@ import { useEditorInputData } from './useEditorInputData';
 const EditorCode = ({input, inputDataTransfer}) => {
 
     const { inputData, handleDidMount, handleChange} = useEditorInputData(input, inputDataTransfer);
-    console.log(inputData, input)
+
     return(
         <div className='editor'>            
             <MonacoEditor

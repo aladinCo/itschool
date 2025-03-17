@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useAuth } from "../context/auth.context";
-import { useCsrfToken } from "../hooks/сsrf.hook";
+import { useCsrfToken } from "../hooks/useCsrfToken";
 import {createLogger } from '../services/logger.services';
 
 // Встановлюємо рівень логування

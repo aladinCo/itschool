@@ -1,0 +1,28 @@
+@use "../../../styles/colors";
+
+.default--active,
+.default{
+    border-style: none;
+    border-width: 0;
+    background-color: colors.$btn-background-default;
+    border-color: colors.$btn-background-default;
+    transition: background-color 0.5s ease;
+}
+.default--active{
+    background-color: colors.$btn-background-default--active;
+    font-weight: 600;
+}
+
+.default:hover{
+    background-color: colors.$btn-background-default--hover;
+    cursor:pointer;
+}
+
+
+.medium{
+    &.circle{
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+}
