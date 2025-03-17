@@ -1,11 +1,6 @@
-//import { createRequire } from "module";
-//import require = createRequire(import.meta.url);
 import dotenv  from 'dotenv'
 dotenv.config();
-/*********************************************** */
-//import pkg from "logrocket";
-//const LogRocket = pkg;
-/*********************************************** */
+
 import express  from 'express';
 
 import cookieParser from 'cookie-parser';
