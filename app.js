@@ -36,9 +36,6 @@ app.use(cors({
 app.use(express.json({ extended: true }))
 app.use(cookieParser());
 
-
-
-
 import authRoutes from './server_modules/routes/auth.routes.js';
 app.use('/api/auth',  authRoutes);
 
@@ -54,11 +51,8 @@ app.use('/api/problems', problemsRoutes);
 //import problemRoutes from './server_modules/routes/problem.routes.js';
 //app.use('/api/problem', problemRoutes);
 
-
-
 // Middleware для обробки CSRF помилок
 app.use(handleCsrfError);
-
 
 const server = http.createServer(app);
 
@@ -74,9 +68,7 @@ const start = async () => {
         process.exit(1)
     }
 }
-start()
-
-
+start();
 
 const PORT = config.global.port || 5000
 server.listen(PORT, async () => {
